@@ -11,6 +11,7 @@ const contactContent = "Scelerisque eleifend donec pretium vulputate sapien. Rho
 
 const app = express();
 
+
 app.set('view engine', 'ejs');
 
 app.use(bodyParser.urlencoded({extended: true}));
@@ -59,7 +60,7 @@ app.get("/posts/:postId", function (req, res) {
 
 const requestedPostId = req.params.postId;
   
-    Post.findOne({_id : requestedPostId}, function(err,post){
+    Post.findOne({_id : requestedPostId }, function(err,post){
       res.render("post",{
         title:post.title,
         content:post.content
@@ -67,8 +68,17 @@ const requestedPostId = req.params.postId;
     });
   });
 
-
-
+app.post("/delete", function(req,res){
+  const postName = req.body.deletebtn;
+  Post.deleteOne({name : postName},function (err) {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log("Deleted successfully");
+      res.redirect("/");
+    }
+  });
+});
 
 app.get("/about", function(req, res){
   res.render("about", {aboutPage: aboutContent})
